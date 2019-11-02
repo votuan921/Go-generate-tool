@@ -1,4 +1,4 @@
-# Go-generate-tool
+# struct-extend-generator
 
 Mini tool generate method from database struct with template using go/ast and go/generate
 
@@ -16,6 +16,9 @@ What things you need to install the software and how to install them
    "go/token"
    "go/parser"
    "go/ast"
+   "bytes"
+   "bufio"
+   "os"
 ```
 
 ### Installing
@@ -23,8 +26,8 @@ What things you need to install the software and how to install them
 To get started, clone the repo and then install the needed packages:
 
 ```
-$ git clone git@github.com:votuan921/Go-generate-tool.git
-$ cd Go-generate-tool
+$ git clone git@github.com:votuan921/struct-extend-generator.git
+$ cd struct-extend-generator
 ```
 
 Replace file db.go to your database file you want generate or change PARSER_FILE_PATH to your file name in parser.go and run command
