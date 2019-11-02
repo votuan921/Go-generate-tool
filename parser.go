@@ -8,7 +8,15 @@ import "bytes"
 import "bufio"
 import "os"
 
+type ParsedStruct struct {
+	StructName string
+	IDType string
+	Fields map[string]string
+}
+
 const PARSER_FILE_PATH = "db.go"
+
+var parsedStructs []*ParsedStruct
 
 func readFileToString(path string) ([]string, error) {
 	file, err := os.Open(path)
@@ -72,12 +80,22 @@ func  main()  {
 			if !ok {
 				continue
 			}
-			fmt.Println("Struct: ", typeSpec.Name)
+			
+			var nStruct *ParsedStruct
+			nStruct = new(ParsedStruct)
+			nStruct.StructName = typeSpec.Name.Name
+			nStruct.Fields = make(map[string]string)
+
 			fields := structType.Fields.List
 			for _, field := range fields {
-				fmt.Println("--Field name: ", field.Names[0])
-				fmt.Println("----Type: ", getStringFromNodePosition(fset, src, field.Type.Pos(), field.Type.End()))
+				fname := field.Names[0].Name
+				ftype := getStringFromNodePosition(fset, src, field.Type.Pos(), field.Type.End())
+				if fname == "Id" {
+					nStruct.IDType = ftype
+				}
+				nStruct.Fields[fname] = ftype
 			}
+			parsedStructs = append(parsedStructs, nStruct)
 		}
 	}
 }
