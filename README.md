@@ -12,7 +12,7 @@ What things you need to install the software and how to install them
 - Go[1.12+](https://golang.org/dl/)
 - Go's Package:
 ```
-   "fmt"
+   "log"
    "go/token"
    "go/parser"
    "go/ast"

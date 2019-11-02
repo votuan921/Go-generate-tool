@@ -1,6 +1,6 @@
 package main
 
-import "fmt"
+import "log"
 import "go/token"
 import "go/parser"
 import "go/ast"
@@ -56,14 +56,13 @@ func  main()  {
 	src, err := readFileToString(PARSER_FILE_PATH)
 
 	if err != nil {
-		fmt.Println("Reading file error ", err)
+		log.Fatalf("Reading file error: %s", err)
 	}
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, PARSER_FILE_PATH, nil, 0)
 
 	if err != nil {
-		fmt.Println("Faild Parsing", err)
-		return
+		log.Fatalf("Faild Parsing: %s", err)
 	}
 
 	for _, decl := range f.Decls {
