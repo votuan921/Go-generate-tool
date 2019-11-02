@@ -3,6 +3,7 @@ package main
 import (
         "bytes"        
         "flag"
+        "fmt"
         "go/format"    
         "io/ioutil"    
         "log"
@@ -33,13 +34,21 @@ func writeToFile(buf bytes.Buffer, outputPath string) {
         }
 }
 
+func usage() {
+        fmt.Fprintf(os.Stderr, "Usage of %s:\n\n", os.Args[0])
+        fmt.Fprintf(os.Stderr, "\t%s [options] [struct_file] [template1] ... [templateN]\n\n", os.Args[0])
+        fmt.Fprintf(os.Stderr, "%s generates Go code for Struct based on template.\n\n", os.Args[0])
+        flag.PrintDefaults()
+        os.Exit(1)
+}
+
 func main() {
         flag.Parse()
         extra := flag.Args()
         dir, err := filepath.Abs("./")
 
         if len(extra) < 2 {
-                log.Fatalf("Not enough")
+                usage()
         }
         structPath, err := filepath.Abs(extra[0])
 
