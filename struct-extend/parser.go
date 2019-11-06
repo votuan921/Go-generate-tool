@@ -15,11 +15,54 @@ func NewParser() Parser {
 	return &innerParser{}
 }
 
-type innerParser struct {
-}
+type innerParser struct{}
 
-func (i *innerParser) Parse(structFilePath string) ([]*ParsedStruct, error) {
+func (i *innerParser) Parse(structPath string) (parsedStructs []*ParsedStruct, err error) {
+	fStrs, err := readFileToString(structPath)
+	if err != nil {
+		return nil, err
+	}
 
+	fSet := token.NewFileSet()
+	parsedFile, err := parser.ParseFile(fSet, structPath, nil, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	parsedStructs = make([]*ParsedStruct, 0)
+	var ps *ParsedStruct
+	for _, decl := range parsedFile.Decls {
+		genDecl, ok := decl.(*ast.GenDecl)
+		if !ok {
+			continue
+		}
+		for _, spec := range genDecl.Specs {
+			typeSpec, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+			structType, ok := typeSpec.Type.(*ast.StructType)
+			if !ok {
+				continue
+			}
+
+			ps = &ParsedStruct{
+				StructName: typeSpec.Name.Name,
+				Fields:     make(map[string]string),
+			}
+			for _, field := range structType.Fields.List {
+				fName := field.Names[0].Name
+				fType := getStringFromNodePosition(fSet, fStrs, field.Type.Pos(), field.Type.End())
+				if fName == "Id" {
+					ps.IDType = fType
+				}
+				ps.Fields[fName] = fType
+			}
+			parsedStructs = append(parsedStructs, ps)
+		}
+	}
+
+	return
 }
 
 type ParsedStruct struct {
@@ -45,70 +88,20 @@ func readFileToString(path string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func getStringFromNodePosition(fset *token.FileSet, fStr []string, pos token.Pos, end token.Pos) string {
-	linePos, colPos := fset.Position(pos).Line, fset.Position(pos).Column
-	lineEnd, colEnd := fset.Position(end).Line, fset.Position(end).Column
-	buf := bytes.Buffer{}
+func getStringFromNodePosition(fSet *token.FileSet, fStrs []string, pos token.Pos, end token.Pos) string {
+	linePos, colPos := fSet.Position(pos).Line, fSet.Position(pos).Column
+	lineEnd, colEnd := fSet.Position(end).Line, fSet.Position(end).Column
+	var buf bytes.Buffer
 
 	if linePos == lineEnd {
-		buf.WriteString(fStr[linePos-1][colPos-1 : colEnd-1])
+		buf.WriteString(fStrs[linePos-1][colPos-1 : colEnd-1])
 	} else {
-		buf.WriteString(fStr[linePos-1][colPos-1:])
+		buf.WriteString(fStrs[linePos-1][colPos-1:])
 		for i := linePos + 1; i < lineEnd; i++ {
-			buf.WriteString(fStr[i])
+			buf.WriteString(fStrs[i])
 		}
-		buf.WriteString(fStr[lineEnd-1][:colEnd-1])
+		buf.WriteString(fStrs[lineEnd-1][:colEnd-1])
 	}
 
 	return buf.String()
-}
-
-func ParseStruct(file_path string) ([]*ParsedStruct, error) {
-	var parsedStructs []*ParsedStruct
-
-	src, err := readFileToString(file_path)
-
-	if err != nil {
-		return nil, err
-	}
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, file_path, nil, 0)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for _, decl := range f.Decls {
-		genDecl, ok := decl.(*ast.GenDecl)
-		if !ok {
-			continue
-		}
-		for _, spec := range genDecl.Specs {
-			typeSpec, ok := spec.(*ast.TypeSpec)
-			if !ok {
-				continue
-			}
-			structType, ok := typeSpec.Type.(*ast.StructType)
-			if !ok {
-				continue
-			}
-
-			var nStruct *ParsedStruct
-			nStruct = new(ParsedStruct)
-			nStruct.StructName = typeSpec.Name.Name
-			nStruct.Fields = make(map[string]string)
-
-			fields := structType.Fields.List
-			for _, field := range fields {
-				fname := field.Names[0].Name
-				ftype := getStringFromNodePosition(fset, src, field.Type.Pos(), field.Type.End())
-				if fname == "Id" {
-					nStruct.IDType = ftype
-				}
-				nStruct.Fields[fname] = ftype
-			}
-			parsedStructs = append(parsedStructs, nStruct)
-		}
-	}
-	return parsedStructs, nil
 }
