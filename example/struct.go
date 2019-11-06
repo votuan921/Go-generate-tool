@@ -1,47 +1,49 @@
-//go:generate struct-extend-generator -g=$GOFILE -o=_slice $GOFILE template.txt
 package mysql
+
+import "github.com/moneyforward/ca_backend/app/pkg/protoext"
+
 type Item struct {
-    // @inject_tag: db:"id"
-    Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" db:"id"`
-    // @inject_tag: db:"type"
-    Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty" db:"type"`
-    // @inject_tag: db:"fs"
-    Fs int32 `protobuf:"varint,3,opt,name=fs,proto3" json:"fs,omitempty" db:"fs"`
-    // @inject_tag: db:"account_group"
-    AccountGroup int32 `protobuf:"varint,4,opt,name=account_group,json=accountGroup,proto3" json:"account_group,omitempty" db:"account_group"`
-    // @inject_tag: db:"account_property"
-    AccountProperty int32 `protobuf:"varint,5,opt,name=account_property,json=accountProperty,proto3" json:"account_property,omitempty" db:"account_property"`
-    // @inject_tag: db:"office_id"
-    OfficeId uint64 `protobuf:"varint,6,opt,name=office_id,json=officeId,proto3" json:"office_id,omitempty" db:"office_id"`
-    // @inject_tag: db:"excise_id"
-    ExciseId uint64 `protobuf:"varint,7,opt,name=excise_id,json=exciseId,proto3" json:"excise_id,omitempty" db:"excise_id"`
-    // @inject_tag: db:"name"
-    Name string `protobuf:"bytes,8,opt,name=name,proto3" json:"name,omitempty" db:"name"`
-    // @inject_tag: db:"yomigana"
-    Yomigana *protoext.NullString `protobuf:"bytes,9,opt,name=yomigana,proto3" json:"yomigana,omitempty" db:"yomigana"`
-    // @inject_tag: db:"romaji"
-    Romaji *protoext.NullString `protobuf:"bytes,10,opt,name=romaji,proto3" json:"romaji,omitempty" db:"romaji"`
-    // @inject_tag: db:"code"
-    Code *protoext.NullString `protobuf:"bytes,11,opt,name=code,proto3" json:"code,omitempty" db:"code"`
-    // @inject_tag: db:"side"
-    Side int32 `protobuf:"varint,12,opt,name=side,proto3" json:"side,omitempty" db:"side"`
-    // @inject_tag: db:"is_active"
-    IsActive bool `protobuf:"varint,13,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty" db:"is_active"`
-    // @inject_tag: db:"disp_order"
-    DispOrder uint64 `protobuf:"varint,14,opt,name=disp_order,json=dispOrder,proto3" json:"disp_order,omitempty" db:"disp_order"`
-    // @inject_tag: db:"item_master_id"
-    ItemMasterId *protoext.NullInt32 `protobuf:"bytes,15,opt,name=item_master_id,json=itemMasterId,proto3" json:"item_master_id,omitempty" db:"item_master_id"`
-    // @inject_tag: db:"created_at"
-    CreatedAt *protoext.Timestamp `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" db:"created_at"`
-    // @inject_tag: db:"updated_at"
-    UpdatedAt            *protoext.Timestamp `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" db:"updated_at"`
-    XXX_NoUnkeyedLiteral struct{}            `json:"-"`
-    XXX_unrecognized     []byte              `json:"-"`
-    XXX_sizecache        int32               `json:"-"`
+	// @inject_tag: db:"id"
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" db:"id"`
+	// @inject_tag: db:"type"
+	Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty" db:"type"`
+	// @inject_tag: db:"fs"
+	Fs int32 `protobuf:"varint,3,opt,name=fs,proto3" json:"fs,omitempty" db:"fs"`
+	// @inject_tag: db:"account_group"
+	AccountGroup int32 `protobuf:"varint,4,opt,name=account_group,json=accountGroup,proto3" json:"account_group,omitempty" db:"account_group"`
+	// @inject_tag: db:"account_property"
+	AccountProperty int32 `protobuf:"varint,5,opt,name=account_property,json=accountProperty,proto3" json:"account_property,omitempty" db:"account_property"`
+	// @inject_tag: db:"office_id"
+	OfficeId uint64 `protobuf:"varint,6,opt,name=office_id,json=officeId,proto3" json:"office_id,omitempty" db:"office_id"`
+	// @inject_tag: db:"excise_id"
+	ExciseId uint64 `protobuf:"varint,7,opt,name=excise_id,json=exciseId,proto3" json:"excise_id,omitempty" db:"excise_id"`
+	// @inject_tag: db:"name"
+	Name string `protobuf:"bytes,8,opt,name=name,proto3" json:"name,omitempty" db:"name"`
+	// @inject_tag: db:"yomigana"
+	Yomigana *protoext.NullString `protobuf:"bytes,9,opt,name=yomigana,proto3" json:"yomigana,omitempty" db:"yomigana"`
+	// @inject_tag: db:"romaji"
+	Romaji *protoext.NullString `protobuf:"bytes,10,opt,name=romaji,proto3" json:"romaji,omitempty" db:"romaji"`
+	// @inject_tag: db:"code"
+	Code *protoext.NullString `protobuf:"bytes,11,opt,name=code,proto3" json:"code,omitempty" db:"code"`
+	// @inject_tag: db:"side"
+	Side int32 `protobuf:"varint,12,opt,name=side,proto3" json:"side,omitempty" db:"side"`
+	// @inject_tag: db:"is_active"
+	IsActive bool `protobuf:"varint,13,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty" db:"is_active"`
+	// @inject_tag: db:"disp_order"
+	DispOrder uint64 `protobuf:"varint,14,opt,name=disp_order,json=dispOrder,proto3" json:"disp_order,omitempty" db:"disp_order"`
+	// @inject_tag: db:"item_master_id"
+	ItemMasterId *protoext.NullInt32 `protobuf:"bytes,15,opt,name=item_master_id,json=itemMasterId,proto3" json:"item_master_id,omitempty" db:"item_master_id"`
+	// @inject_tag: db:"created_at"
+	CreatedAt *protoext.Timestamp `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" db:"created_at"`
+	// @inject_tag: db:"updated_at"
+	UpdatedAt            *protoext.Timestamp `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" db:"updated_at"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
 }
 
 type Event struct {
-    Id uint64
+	Id uint64
 	// &#64;inject_tag: db:"db"
 	Db string `protobuf:"bytes,1,opt,name=db,proto3" json:"db,omitempty" db:"db"`
 	// &#64;inject_tag: db:"name"
