@@ -1,16 +1,28 @@
-package struct_extend
+package structext
 
-import "go/token"
-import "go/parser"
-import "go/ast"
-import "bytes"
-import "bufio"
-import "os"
+import (
+	"bufio"
+	"bytes"
+	"go/ast"
+	"go/parser"
+	"go/token"
+	"os"
+)
 
+// Parser is interface of go file parser
 type Parser interface {
+	// Parse parses a given file to structs
 	Parse(structPath string) ([]*ParsedStruct, error)
 }
 
+// ParsedStruct represents a struct of a parsed struct
+type ParsedStruct struct {
+	StructName string
+	IDType     string
+	Fields     map[string]string
+}
+
+// NewParser returns a implemented instance of Parser interface
 func NewParser() Parser {
 	return &innerParser{}
 }
@@ -63,12 +75,6 @@ func (i *innerParser) Parse(structPath string) (parsedStructs []*ParsedStruct, e
 	}
 
 	return
-}
-
-type ParsedStruct struct {
-	StructName string
-	IDType     string
-	Fields     map[string]string
 }
 
 func readFileToString(path string) ([]string, error) {

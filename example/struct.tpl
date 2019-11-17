@@ -1,3 +1,4 @@
+{{ range . }}
 type {{.StructName}}ID {{.IDType}}
 type {{.StructName}}Slice []*{{.StructName}}
 // GroupByID returns a map and a slice of given ItemSlice
@@ -13,3 +14,4 @@ func (ss {{.StructName}}Slice) GroupByID() (grouped map[{{.StructName}}ID]*{{.St
     }
     return
 }
+{{ end }}
