@@ -11,7 +11,7 @@ $ struct-extend-generator struct.go template.txt
 ```
 Check `generated` folder for code genetared 
 
-# Using struct-extend-generator
+## Using struct-extend-generator
 
 `struct-extend-generator` generates code based upon existing `struct` types with `template`.  For example, `struct-extend-generator struct.go template.txt` will by default create list new file `structName_extend.go` that contains serialization functions for all structs found in `struct.go` and have same template with `template.txt`
 ```
@@ -40,6 +40,43 @@ then simply execute:
 
 ```sh
 $ go generate
+```
+
+## How to create 'template' correct
+
+`struct-extend-generator` template based on golang's package ['text/template'](https://golang.org/pkg/text/template).
+Templates are executed by applying them to a data structure. Annotations in the template refer to elements of the data structure (typically a field of a struct or a key in a map) to control execution and derive values to be displayed.
+
+```
+Which variables could be used in template?
+```
+Execution of the template walks the structure and sets the cursor, represented by a period '.' and called "dot", to the value at the current location in the structure as execution proceeds.
+
+Example we have parsed struct
+```
+type ParsedStruct struct {
+        StructName string
+        IDType     string
+        Fields     map[string]string
+}
+```
+then we can create template like this
+```
+type {{.StructName}}ID {{.IDType}}
+type {{.StructName}}Slice []*{{.StructName}}
+// GroupByID returns a map and a slice of given ItemSlice
+func (ss {{.StructName}}Slice) GroupByID() (grouped map[{{.StructName}}ID]*{{.StructName}}, ids []{{.StructName}}ID){
+    if len(ss) == 0 {
+        return
+    }
+    grouped = make(map[{{.StructName}}ID]*{{.StructName}})
+    ids = make([]{{.StructName}}ID, len(ss))
+    for idx, i := range ss {
+        grouped[i.Id] = i
+        ids[idx] = {{.StructName}}ID(i.Id)
+    }
+    return
+}
 ```
 
 ## License
