@@ -19,7 +19,7 @@ type Parser interface {
 type ParsedStruct struct {
 	StructName string
 	IDType     string
-	Fields     map[string]string
+	Fields     map[string]string //key: Field name, value: Field type
 }
 
 // NewParser returns a implemented instance of Parser interface

@@ -1,45 +1,37 @@
 # struct-extend-generator
 
-struct-extend-generator generate method from database struct with template using go/ast and go/generate
+struct-extend-generator parses the given go structs and generates new file based on given template and parsed structs.
 
-## Getting Started
-
-If `struct.go` contains the `struct` types and `template.txt` you want to generate code, and assuming `GOPATH` is set to a reasonable value for an existing project (meaning that in this particular example if `struct.go` and `template.txt` is in the `myproject` directory, the project should be under `$GOPATH/src/myproject`), you can just run:
+# Usage
+- Firstly, the go structs file and template file can be created as you want. Especially you have structs of tables of database schema, then some utility methods like group by ID, or filter to get slice of colum.
+- Then install the tool:
+```bash
+$go install github.com/votuan921/struct-extend-generator
 ```
-$ go get github.com/votuan921/struct-extend-generator
-$ struct-extend-generator struct.go template.txt
+- And generates what you want by given go structs file and template path:
 ```
-Check `generated` folder for code genetared 
-
-# Using struct-extend-generator
-
-`struct-extend-generator` generates code based upon existing `struct` types with `template`.  For example, `struct-extend-generator struct.go template.txt` will by default create list new file `structName_extend.go` that contains serialization functions for all structs found in `struct.go` and have same template with `template.txt`
+Extended methods generator for Go struct.
+	Usage: $struct-extend-generator [options] /absolute/path/to/structs_file.go /absolute/path/to/template.tpl
+	Options:
+			-e: output file extension. Default: ".extend.go"
+			-o: absolute path to output file directory. Default is struct file dir.
 ```
-Usage of struct-extend-generator:
-
-         struct-extend-generator [options] [structFile] [template1]..[templateN]
-
-struct-extend-generator generates Go code for struct with template
-   [options]
-      -g=string group all structName extend to one file and named prefix with string(default: "")
-      -o=string add suffix to all generated file with string(default: "_extend")
+- Usage of parsed structs in template could be:
 ```
-Your `structFile` code must be in a compilable state for `struct-extend-generator` to work. If you code doesn't compile `struct-extend-generator` will most likely exit with an error.
-
-## Using struct-extend-generator with `go generate`
-
-`struct-extend-generator` is fitable with `go generate`. It allows you to specify the `struct-extend-generator` command inside your individual struct files and run them all at once. This way you don't have to maintain a separate build file with the files you need to generate.
-
-Add this comment anywhere inside your struct files:
-
-```Go
-//go:generate struct-extend-generator $GOFILE template.txt
+// ParsedStruct represents a struct of a parsed struct
+type ParsedStruct struct {
+	StructName string
+	IDType     string
+	Fields     map[string]string //key: Field name, value: Field type
+}
 ```
+-  Refer to example dir to more details of usage.
 
-then simply execute:
-
-```sh
-$ go generate
+## Example
+```bash
+$go get -u github.com/votuan921/struct-extend-generator
+$cd $GOPATH/src/github.com/votuan921/struct-extend-generator
+$struct-extend-generator $GOPATH/src/github.com/votuan921/struct-extend-generator/example/struct.go.example $GOPATH/src/github.com/votuan921/struct-extend-generator/example/struct.tpl
 ```
 
 ## License
